@@ -1,0 +1,1 @@
+export const TOKEN_COOKIES_KEY = 'ryo-time-tracker-token'
