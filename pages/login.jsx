@@ -46,7 +46,7 @@ const Login = () => {
             updateUser(response.user)
 
             // Redirect user to dashboard
-            router.push('/dashboard')
+            router.push('/')
         }
     }
 
