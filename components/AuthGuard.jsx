@@ -1,4 +1,4 @@
-import {useLayoutEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import {TOKEN_COOKIES_KEY} from "../constants"
@@ -10,7 +10,7 @@ export default function AuthGuard({children}) {
 
     // Grab JWT from cookies
     // If no cookie, redirect to login page
-    useLayoutEffect(() => {
+    useEffect(() => {
       if (token && !loggedIn) {
         // Validate token here
         return setLoggedIn(true)
