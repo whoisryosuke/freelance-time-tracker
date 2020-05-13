@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Box } from '@chakra-ui/core'
+import Header from "../components/Header"
 
 export default function BaseLayout({ children }) {
   return (
@@ -9,7 +10,8 @@ export default function BaseLayout({ children }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <Box p={3} textAlign="center">
+      <Header />
+      <Box p={3} ml="75px" textAlign="center">
         {children}
       </Box>
     </motion.main>

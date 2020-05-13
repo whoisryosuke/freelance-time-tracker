@@ -1,11 +1,11 @@
 import React from 'react'
 import Link from 'next/link'
-import { Box, Heading, Flex, Text, Button } from '@chakra-ui/core'
+import { Box, Heading, IconButton, Flex, Stack, Text, Button } from '@chakra-ui/core'
 
 const MenuItems = ({ children }) => (
-  <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
+  <Box mb={3}>
     {children}
-  </Text>
+  </Box>
 )
 
 const Header = (props) => {
@@ -15,57 +15,48 @@ const Header = (props) => {
   return (
     <Flex
       as="nav"
-      align="center"
-      justify="space-between"
       wrap="wrap"
-      padding="1.5rem"
+      flexDirection="column"
+      width="75px"
+      height="100vh"
+      position="fixed"
+      padding={4}
       bg="teal.500"
       color="white"
       {...props}
     >
-      <Flex align="center" mr={5}>
-        <Heading as="h1" size="lg" letterSpacing={'-.1rem'}>
+      <Flex align="center" mb={5}>
+        <Heading as="h1" size="lg" letterSpacing="-.1rem">
           <Link href="/">
-            <a>Chakra UI</a>
+            <a>FTT</a>
           </Link>
         </Heading>
       </Flex>
 
-      <Box display={{ sm: 'block', md: 'none' }} onClick={handleToggle}>
-        <svg
-          fill="white"
-          width="12px"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <title>Menu</title>
-          <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-        </svg>
-      </Box>
-
-      <Box
-        display={{ sm: show ? 'block' : 'none', md: 'flex' }}
-        width={{ sm: 'full', md: 'auto' }}
-        alignItems="center"
-        flexGrow={1}
-      >
+      <Stack spacing={3}>
         <MenuItems>
           <Link href="/about">
-            <a>Docs</a>
+            <IconButton
+              as="a"
+              variant="outline"
+              variantColor="teal.300"
+              aria-label="Send email"
+              icon="calendar"
+            />
           </Link>
         </MenuItems>
-        <MenuItems>Examples</MenuItems>
-        <MenuItems>Blog</MenuItems>
-      </Box>
-
-      <Box
-        display={{ sm: show ? 'block' : 'none', md: 'block' }}
-        mt={{ base: 4, md: 0 }}
-      >
-        <Button bg="transparent" border="1px">
-          Create account
-        </Button>
-      </Box>
+        <MenuItems>
+          <Link href="/about">
+            <IconButton
+              as="a"
+              variant="outline"
+              variantColor="teal.300"
+              aria-label="Send email"
+              icon="info"
+            />
+          </Link>
+        </MenuItems>
+      </Stack>
     </Flex>
   )
 }
