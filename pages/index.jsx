@@ -13,13 +13,12 @@ const Dashboard = () => {
   // View = Day/Week/Month/etc
   const [view, setView] = useState({})
   const [dateRange, setDateRange] = useState({
-    start: parseISO(new Date().toISOString()),
-    end: addDays(new Date(), 7)
+    start: subDays(new Date(), 7),
+    end: parseISO(new Date().toISOString())
   })
   const [hours, setHours] = useState({})
   const { user } = useUser()
   const token = Cookies.get(TOKEN_COOKIES_KEY)
-  console.log('dateRange',dateRange)
 
   const parseDate = (date) => {
     return format(date, 'MMM d, Y')
@@ -67,17 +66,17 @@ const Dashboard = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <div>
+        <Flex>
           <Button onClick={prevDay}>PREV</Button>
-          <div>
+          <Box p={2} mx={3}>
             {parseDate(dateRange.start)}
             {' '}
             -
             {' '}
             {parseDate(dateRange.end)}
-          </div>
+          </Box>
           <Button onClick={nextDay}>NEXT</Button>
-        </div>
+        </Flex>
 
         <div>
           <Heading as="h2" size="xl">
