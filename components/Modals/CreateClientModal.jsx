@@ -18,8 +18,7 @@ import Cookies from 'js-cookie'
 import { capitalize } from "../../helpers/capitalize"
 import { TOKEN_COOKIES_KEY, COLOR_CATEGORIES } from '../../constants'
 
-export const CreateClientDrawer = ({isOpen, onClose}) => {
-    const [message, setMessage] = useState()
+export const CreateClientModal = ({isOpen, onClose}) => {
     const [formData, setFormData] = useState({
         Name: "",
         Description: "",
@@ -100,4 +99,4 @@ export const CreateClientDrawer = ({isOpen, onClose}) => {
     )
 }
 
-export default CreateClientDrawer
+export default CreateClientModal
