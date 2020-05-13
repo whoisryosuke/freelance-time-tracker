@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import Cookies from "js-cookie"
 import Strapi from "strapi-sdk-javascript"
 import { motion } from 'framer-motion'
-import { Button, Input, Stack } from '@chakra-ui/core'
+import { Box, Button, Input, Stack } from '@chakra-ui/core'
 import {TOKEN_COOKIES_KEY} from "../constants"
 import {useUser} from "../context/UserContext"
 import BaseLayout from "../layouts/BaseLayout"
@@ -50,21 +50,36 @@ const Login = () => {
         }
     }
 
-    return(
+    return (
       <BaseLayout>
         <Head>
           <title>Login</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <form method="POST" onSubmit={submitForm}>
-          <Stack spacing={3}>
-            <Input name="identifier" placeholder="Username" value={formData.identifier} onChange={onChange} />
-            <Input name="password" type="password" placeholder="Password" value={formData.password} onChange={onChange} />
-            <Button type="submit" onClick={submitForm}>Login</Button>
-          </Stack>
-        </form>
+        <Box textAlign="center">
+          <form method="POST" onSubmit={submitForm}>
+            <Stack spacing={3}>
+              <Input
+                name="identifier"
+                placeholder="Username"
+                value={formData.identifier}
+                onChange={onChange}
+              />
+              <Input
+                name="password"
+                type="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={onChange}
+              />
+              <Button type="submit" onClick={submitForm}>
+                Login
+              </Button>
+            </Stack>
+          </form>
+        </Box>
       </BaseLayout>
-)}
+    )}
 
 export default Login
