@@ -11,7 +11,7 @@ export default function BaseLayout({ children }) {
       animate={{ opacity: 1 }}
     >
       <Header />
-      <Box p={3} ml="75px">
+      <Box p={8} ml="75px">
         {children}
       </Box>
     </motion.main>
