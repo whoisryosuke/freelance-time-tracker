@@ -10,6 +10,7 @@ import {
   parseISO,
 } from 'date-fns'
 import { TOKEN_COOKIES_KEY } from '../constants'
+import {ColumnProvider} from '../context/ColumnContext'
 import AuthGuard from '../components/AuthGuard'
 import { CreateHoursModal } from '../components/Modals/CreateHoursModal'
 import { WeeklyView } from '../components/WeeklyView'
@@ -84,25 +85,28 @@ const Dashboard = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <Flex>
-          <Button onClick={prevDay}>PREV</Button>
-          <Box p={2} mx={3}>
-            {parseDate(dateRange.start)}
-            {' '}
-            -
-            {' '}
-            {parseDate(dateRange.end)}
-          </Box>
-          <Button onClick={nextDay}>NEXT</Button>
-        </Flex>
+        <ColumnProvider>
+          <Flex>
+            <Button onClick={prevDay}>PREV</Button>
+            <Box p={2} mx={3}>
+              {parseDate(dateRange.start)}
+              {' '}
+              -
+              {' '}
+              {parseDate(dateRange.end)}
+            </Box>
+            <Button onClick={nextDay}>NEXT</Button>
+          </Flex>
 
-        <WeeklyView
-          dateRange={dateRange}
-          hours={hours}
-          openHourModal={onOpen}
-        />
+          <WeeklyView
+            dateRange={dateRange}
+            hours={hours}
+            openHourModal={onOpen}
+          />
 
-        <CreateHoursModal isOpen={isOpen} onClose={onClose} />
+          <CreateHoursModal isOpen={isOpen} onClose={onClose} />
+        </ColumnProvider>
+        
       </BaseLayout>
     </AuthGuard>
   )

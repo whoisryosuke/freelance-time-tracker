@@ -5,9 +5,15 @@ import {
 } from 'date-fns'
 import { Box, Heading, Stack } from '@chakra-ui/core'
 import { parseDay, parseMonthDate } from '../helpers/parseDates'
+import { useColumn } from "../context/ColumnContext"
 import TimeCard from './TimeCard'
 
 export const WeeklyView = ({ dateRange, hours, openHourModal }) => {
+  const { updateColumn } = useColumn()
+  const clickColumn = (date) => {
+    updateColumn(date)
+    openHourModal()
+  }
          return (
            <Box
              width="100%"
@@ -50,7 +56,7 @@ export const WeeklyView = ({ dateRange, hours, openHourModal }) => {
                    p={3}
                    display={['block', 'inline-block']}
                    verticalAlign="top"
-                   onClick={openHourModal}
+                   onClick={() => clickColumn(date)}
                  >
                    <Heading size="md" mb={3}>
                      {parseDay(date)}

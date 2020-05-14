@@ -20,6 +20,7 @@ import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
 import { addHours, parseISO } from 'date-fns'
 import { DatePicker } from '../DatePicker'
+import {useColumn } from "../../context/ColumnContext"
 import { TOKEN_COOKIES_KEY, RATE_TYPES, STATUS } from '../../constants'
 import { capitalize } from '../../helpers/capitalize'
 
@@ -34,6 +35,7 @@ export const CreateHoursModal = ({ isOpen, onClose }) => {
     status: '',
     project: '',
   })
+  const { column } = useColumn()
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
   const strapi = new Strapi('http://localhost:1337/')
@@ -81,6 +83,13 @@ export const CreateHoursModal = ({ isOpen, onClose }) => {
     }
     fetchProjects()
   }, [token])
+
+  useEffect(() => {
+    console.log('column context', column)
+      const start = parseISO(new Date(column).toISOString())
+      const end = addHours(new Date(column), 1)
+      setFormData((prevState) => ({ ...prevState, start, end }))
+  }, [column])
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose} maxWidth="30rem">
