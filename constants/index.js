@@ -9,3 +9,15 @@ export const COLOR_CATEGORIES = [
     'orange',
     'purple'
 ]
+
+export const RATE_TYPES = [
+    'hourly',
+    'flat'
+]
+
+export const STATUS = [
+    'pending',
+    'invoiced',
+    'paid',
+    'refunded'
+]
