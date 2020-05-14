@@ -1,28 +1,35 @@
 import {useEffect, useState } from 'react'
 import Head from 'next/head'
-import { Box, Button, Flex, Heading } from "@chakra-ui/core"
+import { Box, Button, Flex, useDisclosure } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
-import { format, formatISO, addDays, subDays, parseISO } from 'date-fns'
-import AuthGuard from '../components/AuthGuard'
-import BaseLayout from '../layouts/BaseLayout'
-import { useUser } from '../context/UserContext'
+import {
+  formatISO,
+  addDays,
+  subDays,
+  parseISO,
+} from 'date-fns'
 import { TOKEN_COOKIES_KEY } from '../constants'
+import AuthGuard from '../components/AuthGuard'
+import { CreateHoursModal } from '../components/Modals/CreateHoursModal'
+import { WeeklyView } from '../components/WeeklyView'
+import { parseDate, parseMonthDate } from '../helpers/parseDates'
+import BaseLayout from '../layouts/BaseLayout'
 
 const Dashboard = () => {
   // View = Day/Week/Month/etc
-  const [view, setView] = useState({})
+  const [view, setView] = useState('week')
   const [dateRange, setDateRange] = useState({
-    start: subDays(new Date(), 7),
+    start: subDays(new Date(), 6),
     end: parseISO(new Date().toISOString())
   })
   const [hours, setHours] = useState({})
-  const { user } = useUser()
+  const {
+    isOpen,
+    onOpen,
+    onClose,
+  } = useDisclosure()
   const token = Cookies.get(TOKEN_COOKIES_KEY)
-
-  const parseDate = (date) => {
-    return format(date, 'MMM d, Y')
-  }
 
   // Fetch hours
   useEffect(() => {
@@ -33,8 +40,19 @@ const Dashboard = () => {
         start_gte: formatISO(dateRange.start),
         end_lte: formatISO(dateRange.end),
       })
-      setHours(latestHours)
+
+      // Sort hours by date
+      const sortedHours = []
+      latestHours.map((hourLog) => {
+        const date = parseMonthDate(new Date(hourLog.start))
+        if (!Array.isArray(sortedHours[date])) {
+          sortedHours[date] = []
+        }
+        sortedHours[date].push(hourLog)
+      })
+      setHours(sortedHours)
     }
+    
     fetchData()
   }, [dateRange, token])
 
@@ -78,15 +96,13 @@ const Dashboard = () => {
           <Button onClick={nextDay}>NEXT</Button>
         </Flex>
 
-        <div>
-          <Heading as="h2" size="xl">
-            {user.username}
-          </Heading>
-          <Heading as="h4" size="md" fontWeight="normal">
-            {user.email}
-          </Heading>
-        </div>
-        <div>{JSON.stringify(hours)}</div>
+        <WeeklyView
+          dateRange={dateRange}
+          hours={hours}
+          openHourModal={onOpen}
+        />
+
+        <CreateHoursModal isOpen={isOpen} onClose={onClose} />
       </BaseLayout>
     </AuthGuard>
   )
