@@ -9,6 +9,8 @@ import {
   DrawerFooter,
   DrawerBody,
   DrawerCloseButton,
+  FormControl,
+  FormLabel,
   Select,
   Stack,
   Textarea,
@@ -47,7 +49,6 @@ export const CreateProjectModal = ({ isOpen, onClose }) => {
     // Submission succeeded
     if (response) {
       console.log(response)
-      // setMessage(response)
     }
   }
 
@@ -68,39 +69,54 @@ export const CreateProjectModal = ({ isOpen, onClose }) => {
         <DrawerBody>
           <form onSubmit={submitForm}>
             <Stack spacing={3}>
-              <Input
-                name="Name"
-                placeholder="Project name"
-                onChange={onChange}
-                isRequired
-              />
-              <Textarea
-                name="Description"
-                placeholder="Project description"
-                size="sm"
-                onChange={onChange}
-                isRequired
-              />
-              <Select
-                name="Color"
-                placeholder="Select color"
-                onChange={onChange}
-                isRequired
-              >
-                {COLOR_CATEGORIES.map((color) => (
-                  <option value={color}>{capitalize(color)}</option>
-                ))}
-              </Select>
-              <Select
-                name="client"
-                placeholder="Select client"
-                onChange={onChange}
-                isRequired
-              >
-                {clients.map((client) => (
-                  <option value={client.id}>{client.Name}</option>
-                ))}
-              </Select>
+              <FormControl>
+                <FormLabel htmlFor="Name">Project name</FormLabel>
+                <Input
+                  name="Name"
+                  placeholder="Project name"
+                  onChange={onChange}
+                  isRequired
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel htmlFor="Description">Description</FormLabel>
+                <Textarea
+                  name="Description"
+                  placeholder="Project description"
+                  size="sm"
+                  onChange={onChange}
+                  isRequired
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel htmlFor="Color">Color</FormLabel>
+                <Select
+                  name="Color"
+                  placeholder="Select color"
+                  onChange={onChange}
+                  isRequired
+                >
+                  {COLOR_CATEGORIES.map((color) => (
+                    <option value={color}>{capitalize(color)}</option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel htmlFor="client">Client</FormLabel>
+                <Select
+                  name="client"
+                  placeholder="Select client"
+                  onChange={onChange}
+                  isRequired
+                >
+                  {clients.map((client) => (
+                    <option value={client.id}>{client.Name}</option>
+                  ))}
+                </Select>
+              </FormControl>
             </Stack>
           </form>
         </DrawerBody>

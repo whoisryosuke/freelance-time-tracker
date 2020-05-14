@@ -9,6 +9,8 @@ import {
   DrawerFooter,
   DrawerBody,
   DrawerCloseButton,
+  FormControl,
+  FormLabel,
   Select,
   Stack,
   Textarea,
@@ -62,29 +64,40 @@ export const CreateClientModal = ({isOpen, onClose}) => {
           <DrawerBody>
             <form onSubmit={submitForm}>
               <Stack spacing={3}>
-                <Input
-                  name="Name"
-                  placeholder="Client name"
-                  onChange={onChange}
-                  isRequired
-                />
-                <Textarea
-                  name="Description"
-                  placeholder="Client description"
-                  size="sm"
-                  onChange={onChange}
-                  isRequired
-                />
-                <Select
-                  name="Color"
-                  placeholder="Select color"
-                  onChange={onChange}
-                  isRequired
-                >
-                  {COLOR_CATEGORIES.map((color) => (
-                    <option value={color}>{capitalize(color)}</option>
-                  ))}
-                </Select>
+                <FormControl>
+                  <FormLabel htmlFor="Name">Client name</FormLabel>
+                  <Input
+                    name="Name"
+                    placeholder="Client name"
+                    onChange={onChange}
+                    isRequired
+                  />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel htmlFor="Description">Description</FormLabel>
+                  <Textarea
+                    name="Description"
+                    placeholder="Client description"
+                    size="sm"
+                    onChange={onChange}
+                    isRequired
+                  />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel htmlFor="Color">Color</FormLabel>
+                  <Select
+                    name="Color"
+                    placeholder="Select color"
+                    onChange={onChange}
+                    isRequired
+                  >
+                    {COLOR_CATEGORIES.map((color) => (
+                      <option value={color}>{capitalize(color)}</option>
+                    ))}
+                  </Select>
+                </FormControl>
               </Stack>
             </form>
           </DrawerBody>
