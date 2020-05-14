@@ -92,7 +92,7 @@ export const CreateHoursModal = ({ isOpen, onClose }) => {
   }, [column])
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} maxWidth="30rem">
+    <Drawer isOpen={isOpen} onClose={onClose} size="md">
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader>Create new project</DrawerHeader>
