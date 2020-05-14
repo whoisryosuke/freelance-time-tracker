@@ -35,7 +35,7 @@ const Header = (props) => {
 
       <Stack spacing={3}>
         <MenuItems>
-          <Link href="/about">
+          <Link href="/">
             <IconButton
               as="a"
               variant="outline"
@@ -46,7 +46,7 @@ const Header = (props) => {
           </Link>
         </MenuItems>
         <MenuItems>
-          <Link href="/about">
+          <Link href="/projects">
             <IconButton
               as="a"
               variant="outline"
