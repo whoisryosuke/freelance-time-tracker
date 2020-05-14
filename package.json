@@ -22,6 +22,7 @@
     "js-cookie": "^2.2.1",
     "next": "9.3.4",
     "react": "16.13.1",
+    "react-datepicker": "^2.15.0",
     "react-dom": "16.13.1",
     "strapi-sdk-javascript": "^0.3.3"
   },
