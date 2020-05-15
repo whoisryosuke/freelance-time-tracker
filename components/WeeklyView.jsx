@@ -1,5 +1,5 @@
 import React from 'react'
-import { eachDayOfInterval, differenceInHours } from 'date-fns'
+import { eachDayOfInterval, differenceInHours, addDays } from 'date-fns'
 import { Box, Heading, Stack } from '@chakra-ui/core'
 import { parseDay, parseMonthDate } from '../helpers/parseDates'
 import { useColumn } from '../context/ColumnContext'
@@ -14,7 +14,9 @@ export const WeeklyView = ({ dateRange, hours, openHourModal }) => {
   return (
     <Box width="100%" height="90vh" overflowX="scroll" whiteSpace="nowrap">
       {eachDayOfInterval({
-        start: dateRange.start,
+        // We add 1 day because this range
+        // dips back 1 extra day, where API isn't fetched
+        start: addDays(dateRange.start, 1),
         end: dateRange.end,
       }).map((date) => {
         const dateKey = parseMonthDate(date)

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { Box, Button, Flex, useDisclosure } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
-import { formatISO, addDays, subDays, parseISO } from 'date-fns'
+import { formatISO, addDays, subDays, subWeeks, parseISO } from 'date-fns'
 import { TOKEN_COOKIES_KEY } from '../constants'
 import { ColumnProvider } from '../context/ColumnContext'
 import AuthGuard from '../components/AuthGuard'
@@ -16,7 +16,7 @@ const Dashboard = () => {
   // View = Day/Week/Month/etc
   const [view, setView] = useState('week')
   const [dateRange, setDateRange] = useState({
-    start: subDays(new Date(), 6),
+    start: subWeeks(new Date(), 1),
     end: parseISO(new Date().toISOString()),
   })
   const [hours, setHours] = useState({})
@@ -84,7 +84,11 @@ const Dashboard = () => {
           <Flex>
             <Button onClick={prevDay}>PREV</Button>
             <Box p={2} mx={3}>
-              {parseDate(dateRange.start)} - {parseDate(dateRange.end)}
+              {parseDate(dateRange.start)}
+              {' '}
+              -
+              {' '}
+              {parseDate(dateRange.end)}
             </Box>
             <Button onClick={nextDay}>NEXT</Button>
           </Flex>
