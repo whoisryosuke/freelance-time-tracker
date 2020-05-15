@@ -62,8 +62,6 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData }) => {
   const submitForm = async (e) => {
     e.preventDefault()
 
-    console.log('form data going to API', formData)
-
     let response
     try {
       response = await strapi.createEntry('hours', formData)
@@ -86,7 +84,6 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData }) => {
   }, [token])
 
   useEffect(() => {
-    console.log('column context', column)
     const start = parseISO(new Date(column).toISOString())
     const end = addHours(new Date(column), 1)
     setFormData((prevState) => ({ ...prevState, start, end }))
