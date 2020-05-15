@@ -30,8 +30,8 @@ export const CreateHoursModal = ({ isOpen, onClose }) => {
     end: addHours(new Date(), 1),
     rate: '',
     Description: '',
-    rate_type: '',
-    status: '',
+    rate_type: 'hourly',
+    status: 'pending',
     project: '',
   })
   const { column } = useColumn()
@@ -61,6 +61,8 @@ export const CreateHoursModal = ({ isOpen, onClose }) => {
    */
   const submitForm = async (e) => {
     e.preventDefault()
+
+    console.log('form data going to API', formData)
 
     let response
     try {
@@ -130,7 +132,7 @@ export const CreateHoursModal = ({ isOpen, onClose }) => {
                   <Select
                     name="rate_type"
                     placeholder="Select rate type"
-                    defaultValue="hourly"
+                    defaultValue={formData.rate_type}
                     onChange={onChange}
                     isRequired
                   >
@@ -146,7 +148,7 @@ export const CreateHoursModal = ({ isOpen, onClose }) => {
                 <Select
                   name="status"
                   placeholder="Select status"
-                  defaultValue="pending"
+                  defaultValue={formData.status}
                   onChange={onChange}
                   isRequired
                 >
