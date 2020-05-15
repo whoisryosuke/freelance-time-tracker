@@ -1,12 +1,16 @@
 import React from 'react'
 import Link from 'next/link'
-import { Box, Heading, IconButton, Flex, Stack, Text, Button } from '@chakra-ui/core'
+import {
+  Box,
+  Heading,
+  IconButton,
+  Flex,
+  Stack,
+  Text,
+  Button,
+} from '@chakra-ui/core'
 
-const MenuItems = ({ children }) => (
-  <Box mb={3}>
-    {children}
-  </Box>
-)
+const MenuItems = ({ children }) => <Box mb={3}>{children}</Box>
 
 const Header = (props) => {
   const [show, setShow] = React.useState(false)

@@ -1,16 +1,11 @@
-import {useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { Box, Button, Flex, useDisclosure } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
-import {
-  formatISO,
-  addDays,
-  subDays,
-  parseISO,
-} from 'date-fns'
+import { formatISO, addDays, subDays, parseISO } from 'date-fns'
 import { TOKEN_COOKIES_KEY } from '../constants'
-import {ColumnProvider} from '../context/ColumnContext'
+import { ColumnProvider } from '../context/ColumnContext'
 import AuthGuard from '../components/AuthGuard'
 import { CreateHoursModal } from '../components/Modals/CreateHoursModal'
 import { WeeklyView } from '../components/WeeklyView'
@@ -22,14 +17,10 @@ const Dashboard = () => {
   const [view, setView] = useState('week')
   const [dateRange, setDateRange] = useState({
     start: subDays(new Date(), 6),
-    end: parseISO(new Date().toISOString())
+    end: parseISO(new Date().toISOString()),
   })
   const [hours, setHours] = useState({})
-  const {
-    isOpen,
-    onOpen,
-    onClose,
-  } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
   const fetchData = async () => {
@@ -61,9 +52,9 @@ const Dashboard = () => {
   const nextDay = (e) => {
     e.preventDefault()
 
-    setDateRange(prevState => ({
+    setDateRange((prevState) => ({
       start: addDays(prevState.start, 1),
-      end: addDays(prevState.end, 1)
+      end: addDays(prevState.end, 1),
     }))
   }
 
@@ -71,9 +62,9 @@ const Dashboard = () => {
   const prevDay = (e) => {
     e.preventDefault()
 
-    setDateRange(prevState => ({
+    setDateRange((prevState) => ({
       start: subDays(prevState.start, 1),
-      end: subDays(prevState.end, 1)
+      end: subDays(prevState.end, 1),
     }))
   }
 
@@ -93,11 +84,7 @@ const Dashboard = () => {
           <Flex>
             <Button onClick={prevDay}>PREV</Button>
             <Box p={2} mx={3}>
-              {parseDate(dateRange.start)}
-              {' '}
-              -
-              {' '}
-              {parseDate(dateRange.end)}
+              {parseDate(dateRange.start)} - {parseDate(dateRange.end)}
             </Box>
             <Button onClick={nextDay}>NEXT</Button>
           </Flex>

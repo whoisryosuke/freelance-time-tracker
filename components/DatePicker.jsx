@@ -1,6 +1,6 @@
 import React from 'react'
-import ReactDatePicker from "react-datepicker"
-import styled from "@emotion/styled"
+import ReactDatePicker from 'react-datepicker'
+import styled from '@emotion/styled'
 
 const StyledDatePicker = styled.div`
   & .react-datepicker-wrapper {
@@ -27,20 +27,20 @@ const StyledDatePicker = styled.div`
   }
 `
 
-export const DatePicker = ({ selected, onChange}) => {
-         return (
-           <StyledDatePicker>
-             <ReactDatePicker
-               selected={selected}
-               onChange={onChange}
-               showTimeSelect
-               timeFormat="HH:mm"
-               timeIntervals={15}
-               timeCaption="time"
-               dateFormat="MM/dd/yyyy h:mm aa"
-             />
-           </StyledDatePicker>
-         )
-       }
+export const DatePicker = ({ selected, onChange }) => {
+  return (
+    <StyledDatePicker>
+      <ReactDatePicker
+        selected={selected}
+        onChange={onChange}
+        showTimeSelect
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        timeCaption="time"
+        dateFormat="MM/dd/yyyy h:mm aa"
+      />
+    </StyledDatePicker>
+  )
+}
 
-       export default DatePicker
+export default DatePicker

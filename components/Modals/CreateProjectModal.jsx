@@ -29,8 +29,8 @@ export const CreateProjectModal = ({ isOpen, onClose }) => {
   })
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
-    const strapi = new Strapi('http://localhost:1337/')
-    strapi.setToken(token)
+  const strapi = new Strapi('http://localhost:1337/')
+  strapi.setToken(token)
 
   const onChange = ({ currentTarget: { name, value } }) => {
     setFormData((prevState) => ({ ...prevState, [name]: value }))

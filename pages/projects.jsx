@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import {
-    Box,
+  Box,
   Button,
   Heading,
   Stack,
   Text,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
@@ -19,8 +19,16 @@ import { TOKEN_COOKIES_KEY } from '../constants'
 const Projects = () => {
   const [clients, setClients] = useState({})
   const [projects, setProjects] = useState({})
-  const { isOpen: clientIsOpen, onOpen: clientOnOpen, onClose: clientOnClose } = useDisclosure()
-  const { isOpen: projectIsOpen, onOpen: projectOnOpen, onClose: projectOnClose } = useDisclosure()
+  const {
+    isOpen: clientIsOpen,
+    onOpen: clientOnOpen,
+    onClose: clientOnClose,
+  } = useDisclosure()
+  const {
+    isOpen: projectIsOpen,
+    onOpen: projectOnOpen,
+    onClose: projectOnClose,
+  } = useDisclosure()
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Box } from '@chakra-ui/core'
-import Header from "../components/Header"
+import Header from '../components/Header'
 
 export default function BaseLayout({ children }) {
   return (
