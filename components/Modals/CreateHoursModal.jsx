@@ -9,7 +9,6 @@ import {
   DrawerFooter,
   DrawerBody,
   DrawerCloseButton,
-  Flex,
   FormControl,
   FormLabel,
   Select,
@@ -113,7 +112,7 @@ export const CreateHoursModal = ({ isOpen, onClose }) => {
                 <DatePicker selected={formData.end} onChange={handleEndDate} />
               </FormControl>
 
-              <Flex>
+              <Stack isInline>
                 <FormControl>
                   <FormLabel htmlFor="rate">Hourly Rate</FormLabel>
                   <Input
@@ -140,7 +139,7 @@ export const CreateHoursModal = ({ isOpen, onClose }) => {
                     ))}
                   </Select>
                 </FormControl>
-              </Flex>
+              </Stack>
 
               <FormControl>
                 <FormLabel htmlFor="status">Status</FormLabel>
