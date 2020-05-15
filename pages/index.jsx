@@ -32,28 +32,28 @@ const Dashboard = () => {
   } = useDisclosure()
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
+  const fetchData = async () => {
+    const strapi = new Strapi('http://localhost:1337/')
+    strapi.setToken(token)
+    const latestHours = await strapi.getEntries('hours', {
+      start_gte: formatISO(dateRange.start),
+      end_lte: formatISO(dateRange.end),
+    })
+
+    // Sort hours by date
+    const sortedHours = []
+    latestHours.map((hourLog) => {
+      const date = parseMonthDate(new Date(hourLog.start))
+      if (!Array.isArray(sortedHours[date])) {
+        sortedHours[date] = []
+      }
+      sortedHours[date].push(hourLog)
+    })
+    setHours(sortedHours)
+  }
+
   // Fetch hours
   useEffect(() => {
-    const fetchData = async () => {
-      const strapi = new Strapi('http://localhost:1337/')
-      strapi.setToken(token)
-      const latestHours = await strapi.getEntries('hours', {
-        start_gte: formatISO(dateRange.start),
-        end_lte: formatISO(dateRange.end),
-      })
-
-      // Sort hours by date
-      const sortedHours = []
-      latestHours.map((hourLog) => {
-        const date = parseMonthDate(new Date(hourLog.start))
-        if (!Array.isArray(sortedHours[date])) {
-          sortedHours[date] = []
-        }
-        sortedHours[date].push(hourLog)
-      })
-      setHours(sortedHours)
-    }
-    
     fetchData()
   }, [dateRange, token])
 
@@ -75,6 +75,10 @@ const Dashboard = () => {
       start: subDays(prevState.start, 1),
       end: subDays(prevState.end, 1)
     }))
+  }
+
+  const updateData = () => {
+    fetchData()
   }
 
   return (
@@ -104,9 +108,12 @@ const Dashboard = () => {
             openHourModal={onOpen}
           />
 
-          <CreateHoursModal isOpen={isOpen} onClose={onClose} />
+          <CreateHoursModal
+            isOpen={isOpen}
+            onClose={onClose}
+            updateData={updateData}
+          />
         </ColumnProvider>
-        
       </BaseLayout>
     </AuthGuard>
   )
