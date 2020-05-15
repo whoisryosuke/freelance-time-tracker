@@ -3,7 +3,7 @@ import { eachDayOfInterval, differenceInHours } from 'date-fns'
 import { Box, Heading, Stack } from '@chakra-ui/core'
 import { parseDay, parseMonthDate } from '../helpers/parseDates'
 import { useColumn } from '../context/ColumnContext'
-import TimeCard from './TimeCard'
+import {TimeCard} from './TimeCard'
 
 export const WeeklyView = ({ dateRange, hours, openHourModal }) => {
   const { updateColumn } = useColumn()
@@ -54,7 +54,10 @@ export const WeeklyView = ({ dateRange, hours, openHourModal }) => {
               {parseDay(date)}
             </Heading>
             <Heading size="sm" mb={3}>
-              {totalHours} hours - ${totalRate}
+              {totalHours}
+              {' '}
+              hours - $
+              {totalRate}
             </Heading>
             {arrayCheck && (
               <Stack spacing={3}>
