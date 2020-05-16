@@ -20,7 +20,7 @@ import Cookies from 'js-cookie'
 import { capitalize } from '../../helpers/capitalize'
 import { TOKEN_COOKIES_KEY, COLOR_CATEGORIES } from '../../constants'
 
-export const CreateClientModal = ({ isOpen, onClose }) => {
+export const CreateClientModal = ({ isOpen, onClose, updateData }) => {
   const [formData, setFormData] = useState({
     Name: '',
     Description: '',
@@ -47,7 +47,7 @@ export const CreateClientModal = ({ isOpen, onClose }) => {
 
     // Submission succeeded
     if (response) {
-      console.log(response)
+      updateData()
       // setMessage(response)
     }
   }

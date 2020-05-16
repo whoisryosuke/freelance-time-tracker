@@ -31,17 +31,22 @@ const Projects = () => {
   } = useDisclosure()
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
+  const fetchData = async () => {
+    const strapi = new Strapi('http://localhost:1337/')
+    strapi.setToken(token)
+    const latestClients = await strapi.getEntries('clients')
+    const latestProjects = await strapi.getEntries('projects')
+    setClients(latestClients)
+    setProjects(latestProjects)
+  }
+
   useEffect(() => {
-    const fetchData = async () => {
-      const strapi = new Strapi('http://localhost:1337/')
-      strapi.setToken(token)
-      const latestClients = await strapi.getEntries('clients')
-      const latestProjects = await strapi.getEntries('projects')
-      setClients(latestClients)
-      setProjects(latestProjects)
-    }
     fetchData()
   }, [token])
+
+  const updateData = () => {
+    fetchData()
+  }
 
   return (
     <AuthGuard>
@@ -105,8 +110,16 @@ const Projects = () => {
           </Button>
         </Stack>
 
-        <CreateClientModal isOpen={clientIsOpen} onClose={clientOnClose} />
-        <CreateProjectModal isOpen={projectIsOpen} onClose={projectOnClose} />
+        <CreateClientModal
+          isOpen={clientIsOpen}
+          onClose={clientOnClose}
+          updateData={updateData}
+        />
+        <CreateProjectModal
+          isOpen={projectIsOpen}
+          onClose={projectOnClose}
+          updateData={updateData}
+        />
       </BaseLayout>
     </AuthGuard>
   )

@@ -20,7 +20,7 @@ import Cookies from 'js-cookie'
 import { capitalize } from '../../helpers/capitalize'
 import { TOKEN_COOKIES_KEY, COLOR_CATEGORIES } from '../../constants'
 
-export const CreateProjectModal = ({ isOpen, onClose }) => {
+export const CreateProjectModal = ({ isOpen, onClose, updateData }) => {
   const [clients, setClients] = useState([])
   const [formData, setFormData] = useState({
     Name: '',
@@ -48,7 +48,7 @@ export const CreateProjectModal = ({ isOpen, onClose }) => {
 
     // Submission succeeded
     if (response) {
-      console.log(response)
+      updateData()
     }
   }
 
