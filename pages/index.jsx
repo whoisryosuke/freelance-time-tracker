@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
-import { Box, Button, Flex, Stack, useDisclosure } from '@chakra-ui/core'
+import { Box, Button, Flex, Stack, Select, useDisclosure } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
 import { formatISO, addDays, subDays, subWeeks, parseISO } from 'date-fns'
@@ -16,6 +16,11 @@ import BaseLayout from '../layouts/BaseLayout'
 const Dashboard = () => {
   // View = Day/Week/Month/etc
   const [view, setView] = useState('week')
+  const [projects, setProjects] = useState([])
+  const [filter, setFilter] = useState({
+    type: 'project',
+    value: ''
+  })
   const [dateRange, setDateRange] = useState({
     start: subWeeks(new Date(), 1),
     end: parseISO(new Date().toISOString()),
@@ -27,10 +32,17 @@ const Dashboard = () => {
   const fetchData = async () => {
     const strapi = new Strapi('http://localhost:1337/')
     strapi.setToken(token)
-    const latestHours = await strapi.getEntries('hours', {
+
+    const apiFilters = {
       start_gte: formatISO(dateRange.start),
       end_lte: formatISO(dateRange.end),
-    })
+    }
+    // Filter by project if dropdown selected
+    if(filter.value !== '') {
+      apiFilters[filter.type] = filter.value
+    }
+
+    const latestHours = await strapi.getEntries('hours', apiFilters)
 
     // Sort hours by date
     const sortedHours = []
@@ -43,11 +55,24 @@ const Dashboard = () => {
     })
     setHours(sortedHours)
   }
+  
+  const fetchProjects = async () => {
+    const strapi = new Strapi('http://localhost:1337/')
+    strapi.setToken(token)
+    const latestProjects = await strapi.getEntries('projects')
+
+    setProjects(latestProjects)
+  }
 
   // Fetch hours
   useEffect(() => {
     fetchData()
-  }, [dateRange, token])
+  }, [dateRange, filter, token])
+
+  // Fetch projects for list
+  useEffect(() => {
+    fetchProjects()
+  }, [token])
 
   // Move forward dates
   const nextDay = (e) => {
@@ -63,10 +88,10 @@ const Dashboard = () => {
   const prevDay = (e) => {
     e.preventDefault()
 
-    setDateRange({
+    setDateRange((prevState) => ({
       start: subDays(prevState.start, 1),
       end: subDays(prevState.end, 1),
-    })
+    }))
   }
 
   // Handle date range form
@@ -81,6 +106,11 @@ const Dashboard = () => {
   }
   const handleEndDateInput = (date) => {
     handleDateInput(date, 'end')
+  }
+
+  // Handle select input
+  const onChange = ({ currentTarget: { value } }) => {
+    setFilter((prevState) => ({...prevState, value}))
   }
 
   const updateData = () => {
@@ -98,19 +128,30 @@ const Dashboard = () => {
         <ColumnProvider>
           <Flex>
             <Button onClick={prevDay}>PREV</Button>
-            <Box p={2} mx={3}>
-              <Stack isInline>
-                <DatePicker
-                  selected={dateRange.start}
-                  onChange={handleStartDateInput}
-                />
-                <DatePicker
-                  selected={dateRange.end}
-                  onChange={handleEndDateInput}
-                />
-              </Stack>
-            </Box>
+            <Stack isInline p={2} mx={3}>
+              <DatePicker
+                selected={dateRange.start}
+                onChange={handleStartDateInput}
+              />
+              <DatePicker
+                selected={dateRange.end}
+                onChange={handleEndDateInput}
+              />
+            </Stack>
             <Button onClick={nextDay}>NEXT</Button>
+            <Box>
+              <Select
+                name="project"
+                placeholder="Filter by project"
+                onChange={onChange}
+                isRequired
+                mx={3}
+              >
+                {projects.map((project) => (
+                  <option value={project.id}>{project.Name}</option>
+                ))}
+              </Select>
+            </Box>
           </Flex>
 
           <WeeklyView
