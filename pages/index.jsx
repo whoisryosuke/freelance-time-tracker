@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
-import { Box, Button, Flex, useDisclosure } from '@chakra-ui/core'
+import { Box, Button, Flex, Stack, useDisclosure } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
 import { formatISO, addDays, subDays, subWeeks, parseISO } from 'date-fns'
@@ -8,6 +8,7 @@ import { TOKEN_COOKIES_KEY } from '../constants'
 import { ColumnProvider } from '../context/ColumnContext'
 import AuthGuard from '../components/AuthGuard'
 import { CreateHoursModal } from '../components/Modals/CreateHoursModal'
+import { DatePicker } from '../components/DatePicker'
 import { WeeklyView } from '../components/WeeklyView'
 import { parseDate, parseMonthDate } from '../helpers/parseDates'
 import BaseLayout from '../layouts/BaseLayout'
@@ -62,10 +63,24 @@ const Dashboard = () => {
   const prevDay = (e) => {
     e.preventDefault()
 
-    setDateRange((prevState) => ({
+    setDateRange({
       start: subDays(prevState.start, 1),
       end: subDays(prevState.end, 1),
+    })
+  }
+
+  // Handle date range form
+  const handleDateInput = (date, name) => {
+    setDateRange((prevState) => ({
+      ...prevState,
+      [name]: date,
     }))
+  }
+  const handleStartDateInput = (date) => {
+    handleDateInput(date, 'start')
+  }
+  const handleEndDateInput = (date) => {
+    handleDateInput(date, 'end')
   }
 
   const updateData = () => {
@@ -84,11 +99,16 @@ const Dashboard = () => {
           <Flex>
             <Button onClick={prevDay}>PREV</Button>
             <Box p={2} mx={3}>
-              {parseDate(dateRange.start)}
-              {' '}
-              -
-              {' '}
-              {parseDate(dateRange.end)}
+              <Stack isInline>
+                <DatePicker
+                  selected={dateRange.start}
+                  onChange={handleStartDateInput}
+                />
+                <DatePicker
+                  selected={dateRange.end}
+                  onChange={handleEndDateInput}
+                />
+              </Stack>
             </Box>
             <Button onClick={nextDay}>NEXT</Button>
           </Flex>
