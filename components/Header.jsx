@@ -46,6 +46,7 @@ const Header = (props) => {
               variantColor="teal.300"
               aria-label="Send email"
               icon="calendar"
+              title="Time Log"
             />
           </Link>
         </MenuItems>
@@ -57,6 +58,7 @@ const Header = (props) => {
               variantColor="teal.300"
               aria-label="Send email"
               icon="info"
+              title="Projects &amp; Clients"
             />
           </Link>
         </MenuItems>
