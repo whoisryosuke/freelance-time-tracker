@@ -7,6 +7,8 @@ import {
   Stack,
   Text,
   useDisclosure,
+  useToast,
+  IconButton,
 } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
@@ -29,6 +31,7 @@ const Projects = () => {
     onOpen: projectOnOpen,
     onClose: projectOnClose,
   } = useDisclosure()
+  const toast = useToast();
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
   const fetchData = async () => {
@@ -38,6 +41,50 @@ const Projects = () => {
     const latestProjects = await strapi.getEntries('projects')
     setClients(latestClients)
     setProjects(latestProjects)
+  }
+
+  const deleteClient = async (id) => {
+    const strapi = new Strapi('http://localhost:1337/')
+    strapi.setToken(token)
+    try {
+      const deletedClient = await strapi.deleteEntry('clients', id)
+    } catch (e) {
+      toast({
+        title: "Delete client failed.",
+        description: "Couldn't delete client.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      })
+    }
+    const filteredClients = clients.filter(client => client.id !== id)
+    setClients(filteredClients)
+
+    toast({
+      title: "Client deleted.",
+      description: "Client was successfully deleted",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    })
+  }
+
+  const editClient = async (id, data) => {
+    const strapi = new Strapi('http://localhost:1337/')
+    strapi.setToken(token)
+    const editedClient = await strapi.updateEntry('clients', id, data)
+    const filteredClients = clients.map(client => {
+      if(client.id === id) return ({...client, ...data})
+    })
+    setClients(filteredClients)
+
+    toast({
+      title: "Client edited.",
+      description: "Client was successfully edited",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    })
   }
 
   useEffect(() => {
@@ -98,11 +145,31 @@ const Projects = () => {
                 color="white"
                 p={5}
                 borderRadius={8}
+                position="relative"
               >
                 <Heading as="h3" size="md">
                   {client.Name}
                 </Heading>
                 <Text>{client.Description}</Text>
+                <Box
+                  position="absolute"
+                  top={3}
+                  right={3}
+                >
+                  <IconButton
+                    variantColor="ghost"
+                    aria-label="Edit client" 
+                    icon="edit"
+                    onClick={() => editClient(client.id)}
+                  />
+                  <IconButton
+                    variantColor="ghost"
+                    aria-label="Delete client" 
+                    icon="delete"
+                    onClick={() => deleteClient(client.id)}
+                  />
+
+                </Box>
               </Box>
             ))}
           <Button variantColor="blue" onClick={clientOnOpen}>
