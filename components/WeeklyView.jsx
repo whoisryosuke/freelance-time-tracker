@@ -5,7 +5,7 @@ import { parseDay, parseMonthDate } from '../helpers/parseDates'
 import { useColumn } from '../context/ColumnContext'
 import {TimeCard} from './TimeCard'
 
-export const WeeklyView = ({ dateRange, hours, openHourModal }) => {
+export const WeeklyView = ({ dateRange, hours, openHourModal, handleEdit }) => {
   const { updateColumn } = useColumn()
   const clickColumn = (date) => {
     updateColumn(date)
@@ -64,7 +64,7 @@ export const WeeklyView = ({ dateRange, hours, openHourModal }) => {
             {arrayCheck && (
               <Stack spacing={3}>
                 {hours[dateKey].map((hourPost) => (
-                  <TimeCard data={hourPost} />
+                  <TimeCard data={hourPost} onClick={() => handleEdit(hourPost.id)} />
                 ))}
               </Stack>
             )}

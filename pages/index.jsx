@@ -16,6 +16,7 @@ import BaseLayout from '../layouts/BaseLayout'
 const Dashboard = () => {
   // View = Day/Week/Month/etc
   const [view, setView] = useState('week')
+  const [editHourId, setEditHourId] = useState(null)
   const [projects, setProjects] = useState([])
   const [filter, setFilter] = useState({
     type: 'project',
@@ -113,6 +114,12 @@ const Dashboard = () => {
     setFilter((prevState) => ({...prevState, value}))
   }
 
+  // Handle edit hours button
+  const handleEdit = (id) => {
+    setEditHourId(id)
+    onOpen()
+  }
+
   const updateData = () => {
     fetchData()
   }
@@ -158,12 +165,15 @@ const Dashboard = () => {
             dateRange={dateRange}
             hours={hours}
             openHourModal={onOpen}
+            handleEdit={handleEdit}
           />
 
           <CreateHoursModal
             isOpen={isOpen}
             onClose={onClose}
             updateData={updateData}
+            hours={hours}
+            hourId={editHourId}
           />
         </ColumnProvider>
       </BaseLayout>

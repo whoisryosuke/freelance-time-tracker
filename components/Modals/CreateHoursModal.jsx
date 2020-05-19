@@ -14,6 +14,7 @@ import {
   Select,
   Stack,
   Textarea,
+  useToast
 } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
@@ -23,7 +24,7 @@ import { useColumn } from '../../context/ColumnContext'
 import { TOKEN_COOKIES_KEY, RATE_TYPES, STATUS } from '../../constants'
 import { capitalize } from '../../helpers/capitalize'
 
-export const CreateHoursModal = ({ isOpen, onClose, updateData }) => {
+export const CreateHoursModal = ({ isOpen, onClose, updateData, hours, hourId }) => {
   const [projects, setProjects] = useState([])
   const [formData, setFormData] = useState({
     start: parseISO(new Date().toISOString()),
@@ -35,6 +36,7 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData }) => {
     project: '',
   })
   const { column } = useColumn()
+  const toast = useToast()
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
   const strapi = new Strapi('http://localhost:1337/')
@@ -64,13 +66,34 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData }) => {
 
     let response
     try {
-      response = await strapi.createEntry('hours', formData)
+      if (hourId) {
+        response = await strapi.updateEntry('hours', hourId, formData)
+      } else {
+        response = await strapi.createEntry('hours', formData)
+      }
     } catch (e) {
       // Submission failed
     }
 
     // Submission succeeded
     if (response) {
+      if (hourId) {
+        toast({
+          title: "Hours edited.",
+          description: "Client was successfully edited",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        })
+      } else {
+        toast({
+          title: "Hours created.",
+          description: "Hours was successfully created",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        })
+      }
       updateData()
     }
   }
@@ -89,11 +112,47 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData }) => {
     setFormData((prevState) => ({ ...prevState, start, end }))
   }, [column])
 
+  // Hydrate form with edit data from props
+  useEffect(() => {
+    if (hourId) {
+      let editHour
+      // We group hours by day, so filter 2 levels down
+      Object.keys(hours).filter(day => {
+        const findHour = hours[day].find(hour => hour.id === hourId)
+        if(findHour) {
+          editHour = findHour
+        }
+      })
+      if (editHour) {
+        const { start,
+          end,
+            rate,
+              Description,
+                rate_type,
+                  status,
+                    project,
+                  } = editHour
+        setFormData({
+          start: parseISO(start),
+          end: parseISO(end),
+          rate,
+          Description,
+          rate_type,
+          status,
+          project: project.id })
+      }
+    }
+  }, [hourId])
+
   return (
     <Drawer isOpen={isOpen} onClose={onClose} size="md">
       <DrawerOverlay />
       <DrawerContent>
-        <DrawerHeader>Create new project</DrawerHeader>
+        <DrawerHeader>
+          {hourId ? 'Edit' : 'Create new'}
+          {' '}
+          hours
+        </DrawerHeader>
         <DrawerCloseButton />
         <DrawerBody>
           <form onSubmit={submitForm}>
@@ -118,7 +177,7 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData }) => {
                     type="number"
                     name="rate"
                     placeholder="Hourly/flat rate"
-                    value={formData.rate}
+                    defaultValue={formData.rate}
                     onChange={onChange}
                     isRequired
                   />
@@ -160,6 +219,7 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData }) => {
                 <Select
                   name="project"
                   placeholder="Select project"
+                  defaultValue={formData.project}
                   onChange={onChange}
                   isRequired
                 >
@@ -175,7 +235,7 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData }) => {
                   name="Description"
                   placeholder="Description"
                   size="sm"
-                  value={formData.Description}
+                  defaultValue={formData.Description}
                   onChange={onChange}
                   isRequired
                 />
@@ -186,7 +246,9 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData }) => {
 
         <DrawerFooter>
           <Button width="100%" variantColor="blue" onClick={submitForm}>
-            Log hours
+            {hourId ? 'Update' : 'Log'}
+            {' '}
+            hours
           </Button>
         </DrawerFooter>
       </DrawerContent>
