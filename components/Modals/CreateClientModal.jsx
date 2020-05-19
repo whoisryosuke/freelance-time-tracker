@@ -14,21 +14,27 @@ import {
   Select,
   Stack,
   Textarea,
-  useToast
+  useToast,
 } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
 import { capitalize } from '../../helpers/capitalize'
 import { TOKEN_COOKIES_KEY, COLOR_CATEGORIES } from '../../constants'
 
-export const CreateClientModal = ({ isOpen, onClose, updateData, clientId, clients }) => {
+export const CreateClientModal = ({
+  isOpen,
+  onClose,
+  updateData,
+  clientId,
+  clients,
+}) => {
   const [formData, setFormData] = useState({
     Name: '',
     Description: '',
     Color: '',
     client: null,
   })
-  const toast = useToast();
+  const toast = useToast()
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
   const onChange = ({ currentTarget: { name, value } }) => {
@@ -56,17 +62,17 @@ export const CreateClientModal = ({ isOpen, onClose, updateData, clientId, clien
     if (response) {
       if (clientId) {
         toast({
-          title: "Client edited.",
-          description: "Client was successfully edited",
-          status: "success",
+          title: 'Client edited.',
+          description: 'Client was successfully edited',
+          status: 'success',
           duration: 9000,
           isClosable: true,
         })
       } else {
         toast({
-          title: "Client created.",
-          description: "Client was successfully created",
-          status: "success",
+          title: 'Client created.',
+          description: 'Client was successfully created',
+          status: 'success',
           duration: 9000,
           isClosable: true,
         })
@@ -78,7 +84,7 @@ export const CreateClientModal = ({ isOpen, onClose, updateData, clientId, clien
 
   useEffect(() => {
     if (clientId) {
-      const editClient = clients.filter(client => client.id === clientId)
+      const editClient = clients.filter((client) => client.id === clientId)
       if (editClient.length > 0) {
         const { Name, Description, Color } = editClient[0]
         setFormData({ Name, Description, Color })
@@ -90,11 +96,7 @@ export const CreateClientModal = ({ isOpen, onClose, updateData, clientId, clien
     <Drawer isOpen={isOpen} onClose={onClose}>
       <DrawerOverlay />
       <DrawerContent>
-        <DrawerHeader>
-          {clientId ? 'Update' : 'Create new'}
-          {' '}
-          client
-        </DrawerHeader>
+        <DrawerHeader>{clientId ? 'Update' : 'Create new'} client</DrawerHeader>
         <DrawerCloseButton />
         <DrawerBody>
           <form onSubmit={submitForm}>
@@ -142,9 +144,7 @@ export const CreateClientModal = ({ isOpen, onClose, updateData, clientId, clien
 
         <DrawerFooter>
           <Button width="100%" variantColor="blue" onClick={submitForm}>
-            {clientId ? 'Update' : 'Create'}
-            {' '}
-            client
+            {clientId ? 'Update' : 'Create'} client
           </Button>
         </DrawerFooter>
       </DrawerContent>

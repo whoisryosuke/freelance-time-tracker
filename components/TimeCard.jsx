@@ -17,16 +17,10 @@ export const TimeCard = ({ data, ...props }) => {
       <Text mb={2}>{data.Description}</Text>
       <Badge mb={3}>{data.status}</Badge>
       <Heading as="h4" size="sm">
-        $
-        {data.rate}
-        {' '}
-        /
-        {data.rate_type}
+        ${data.rate} /{data.rate_type}
       </Heading>
       <Text mb={2}>
-        {differenceInHours(new Date(data.start), new Date(data.end)) * -1}
-        {' '}
-        hours
+        {differenceInHours(new Date(data.start), new Date(data.end)) * -1} hours
       </Text>
     </Box>
   )

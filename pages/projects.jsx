@@ -33,7 +33,7 @@ const Projects = () => {
     onOpen: projectOnOpen,
     onClose: projectOnClose,
   } = useDisclosure()
-  const toast = useToast();
+  const toast = useToast()
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
   const fetchData = async () => {
@@ -54,18 +54,18 @@ const Projects = () => {
       toast({
         title: `Delete ${section} failed.`,
         description: `Couldn't delete ${section}.`,
-        status: "error",
+        status: 'error',
         duration: 9000,
         isClosable: true,
       })
     }
-    const filteredClients = clients.filter(client => client.id !== id)
+    const filteredClients = clients.filter((client) => client.id !== id)
     setClients(filteredClients)
 
     toast({
       title: `Deleted ${section}.`,
       description: `Successfully deleted ${section}`,
-      status: "success",
+      status: 'success',
       duration: 9000,
       isClosable: true,
     })
@@ -120,11 +120,7 @@ const Projects = () => {
                 </Heading>
                 <Text>{project.Description}</Text>
 
-                <Box
-                  position="absolute"
-                  top={3}
-                  right={3}
-                >
+                <Box position="absolute" top={3} right={3}>
                   <IconButton
                     variantColor="ghost"
                     aria-label="Edit client"
@@ -137,7 +133,6 @@ const Projects = () => {
                     icon="delete"
                     onClick={() => handleDelete('projects', project.id)}
                   />
-
                 </Box>
               </Box>
             ))}
@@ -167,24 +162,19 @@ const Projects = () => {
                   {client.Name}
                 </Heading>
                 <Text>{client.Description}</Text>
-                <Box
-                  position="absolute"
-                  top={3}
-                  right={3}
-                >
+                <Box position="absolute" top={3} right={3}>
                   <IconButton
                     variantColor="ghost"
-                    aria-label="Edit client" 
+                    aria-label="Edit client"
                     icon="edit"
                     onClick={() => handleClientEdit(client.id)}
                   />
                   <IconButton
                     variantColor="ghost"
-                    aria-label="Delete client" 
+                    aria-label="Delete client"
                     icon="delete"
                     onClick={() => handleDelete('clients', client.id)}
                   />
-
                 </Box>
               </Box>
             ))}

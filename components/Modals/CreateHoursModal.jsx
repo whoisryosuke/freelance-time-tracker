@@ -14,7 +14,7 @@ import {
   Select,
   Stack,
   Textarea,
-  useToast
+  useToast,
 } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
@@ -24,7 +24,13 @@ import { useColumn } from '../../context/ColumnContext'
 import { TOKEN_COOKIES_KEY, RATE_TYPES, STATUS } from '../../constants'
 import { capitalize } from '../../helpers/capitalize'
 
-export const CreateHoursModal = ({ isOpen, onClose, updateData, hours, hourId }) => {
+export const CreateHoursModal = ({
+  isOpen,
+  onClose,
+  updateData,
+  hours,
+  hourId,
+}) => {
   const [projects, setProjects] = useState([])
   const [formData, setFormData] = useState({
     start: parseISO(new Date().toISOString()),
@@ -79,17 +85,17 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData, hours, hourId })
     if (response) {
       if (hourId) {
         toast({
-          title: "Hours edited.",
-          description: "Client was successfully edited",
-          status: "success",
+          title: 'Hours edited.',
+          description: 'Client was successfully edited',
+          status: 'success',
           duration: 9000,
           isClosable: true,
         })
       } else {
         toast({
-          title: "Hours created.",
-          description: "Hours was successfully created",
-          status: "success",
+          title: 'Hours created.',
+          description: 'Hours was successfully created',
+          status: 'success',
           duration: 9000,
           isClosable: true,
         })
@@ -117,21 +123,22 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData, hours, hourId })
     if (hourId) {
       let editHour
       // We group hours by day, so filter 2 levels down
-      Object.keys(hours).filter(day => {
-        const findHour = hours[day].find(hour => hour.id === hourId)
-        if(findHour) {
+      Object.keys(hours).filter((day) => {
+        const findHour = hours[day].find((hour) => hour.id === hourId)
+        if (findHour) {
           editHour = findHour
         }
       })
       if (editHour) {
-        const { start,
+        const {
+          start,
           end,
-            rate,
-              Description,
-                rate_type,
-                  status,
-                    project,
-                  } = editHour
+          rate,
+          Description,
+          rate_type,
+          status,
+          project,
+        } = editHour
         setFormData({
           start: parseISO(start),
           end: parseISO(end),
@@ -139,7 +146,8 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData, hours, hourId })
           Description,
           rate_type,
           status,
-          project: project.id })
+          project: project.id,
+        })
       }
     }
   }, [hourId])
@@ -148,11 +156,7 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData, hours, hourId })
     <Drawer isOpen={isOpen} onClose={onClose} size="md">
       <DrawerOverlay />
       <DrawerContent>
-        <DrawerHeader>
-          {hourId ? 'Edit' : 'Create new'}
-          {' '}
-          hours
-        </DrawerHeader>
+        <DrawerHeader>{hourId ? 'Edit' : 'Create new'} hours</DrawerHeader>
         <DrawerCloseButton />
         <DrawerBody>
           <form onSubmit={submitForm}>
@@ -246,9 +250,7 @@ export const CreateHoursModal = ({ isOpen, onClose, updateData, hours, hourId })
 
         <DrawerFooter>
           <Button width="100%" variantColor="blue" onClick={submitForm}>
-            {hourId ? 'Update' : 'Log'}
-            {' '}
-            hours
+            {hourId ? 'Update' : 'Log'} hours
           </Button>
         </DrawerFooter>
       </DrawerContent>

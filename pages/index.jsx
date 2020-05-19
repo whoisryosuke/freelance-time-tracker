@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
-import { Box, Button, Flex, Stack, Select, useDisclosure } from '@chakra-ui/core'
+import {
+  Box,
+  Button,
+  Flex,
+  Stack,
+  Select,
+  useDisclosure,
+} from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
 import { formatISO, addDays, subDays, subWeeks, parseISO } from 'date-fns'
@@ -20,7 +27,7 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([])
   const [filter, setFilter] = useState({
     type: 'project',
-    value: ''
+    value: '',
   })
   const [dateRange, setDateRange] = useState({
     start: subWeeks(new Date(), 1),
@@ -39,7 +46,7 @@ const Dashboard = () => {
       end_lte: formatISO(dateRange.end),
     }
     // Filter by project if dropdown selected
-    if(filter.value !== '') {
+    if (filter.value !== '') {
       apiFilters[filter.type] = filter.value
     }
 
@@ -56,7 +63,7 @@ const Dashboard = () => {
     })
     setHours(sortedHours)
   }
-  
+
   const fetchProjects = async () => {
     const strapi = new Strapi('http://localhost:1337/')
     strapi.setToken(token)
@@ -111,7 +118,7 @@ const Dashboard = () => {
 
   // Handle select input
   const onChange = ({ currentTarget: { value } }) => {
-    setFilter((prevState) => ({...prevState, value}))
+    setFilter((prevState) => ({ ...prevState, value }))
   }
 
   // Handle edit hours button
