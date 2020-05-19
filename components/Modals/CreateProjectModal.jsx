@@ -98,7 +98,11 @@ export const CreateProjectModal = ({ isOpen, onClose, updateData, projectId, pro
     <Drawer isOpen={isOpen} onClose={onClose}>
       <DrawerOverlay />
       <DrawerContent>
-        <DrawerHeader>Create new project</DrawerHeader>
+        <DrawerHeader>
+          {projectId ? 'Update' : 'Create new'}
+          {' '}
+          project
+        </DrawerHeader>
         <DrawerCloseButton />
         <DrawerBody>
           <form onSubmit={submitForm}>

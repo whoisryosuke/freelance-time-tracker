@@ -90,7 +90,11 @@ export const CreateClientModal = ({ isOpen, onClose, updateData, clientId, clien
     <Drawer isOpen={isOpen} onClose={onClose}>
       <DrawerOverlay />
       <DrawerContent>
-        <DrawerHeader>Create new client</DrawerHeader>
+        <DrawerHeader>
+          {clientId ? 'Update' : 'Create new'}
+          {' '}
+          client
+        </DrawerHeader>
         <DrawerCloseButton />
         <DrawerBody>
           <form onSubmit={submitForm}>
