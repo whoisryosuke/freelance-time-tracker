@@ -21,6 +21,8 @@ import { TOKEN_COOKIES_KEY } from '../constants'
 const Projects = () => {
   const [clients, setClients] = useState({})
   const [projects, setProjects] = useState({})
+  const [editProjectId, setEditProjectId] = useState(null)
+  const [editClientId, setEditClientId] = useState(null)
   const {
     isOpen: clientIsOpen,
     onOpen: clientOnOpen,
@@ -43,15 +45,15 @@ const Projects = () => {
     setProjects(latestProjects)
   }
 
-  const deleteClient = async (id) => {
+  const handleDelete = async (section, id) => {
     const strapi = new Strapi('http://localhost:1337/')
     strapi.setToken(token)
     try {
-      const deletedClient = await strapi.deleteEntry('clients', id)
+      await strapi.deleteEntry(section, id)
     } catch (e) {
       toast({
-        title: "Delete client failed.",
-        description: "Couldn't delete client.",
+        title: `Delete ${section} failed.`,
+        description: `Couldn't delete ${section}.`,
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -61,30 +63,24 @@ const Projects = () => {
     setClients(filteredClients)
 
     toast({
-      title: "Client deleted.",
-      description: "Client was successfully deleted",
+      title: `Deleted ${section}.`,
+      description: `Successfully deleted ${section}`,
       status: "success",
       duration: 9000,
       isClosable: true,
     })
+
+    fetchData()
   }
 
-  const editClient = async (id, data) => {
-    const strapi = new Strapi('http://localhost:1337/')
-    strapi.setToken(token)
-    const editedClient = await strapi.updateEntry('clients', id, data)
-    const filteredClients = clients.map(client => {
-      if(client.id === id) return ({...client, ...data})
-    })
-    setClients(filteredClients)
+  const handleClientEdit = (id) => {
+    setEditClientId(id)
+    clientOnOpen()
+  }
 
-    toast({
-      title: "Client edited.",
-      description: "Client was successfully edited",
-      status: "success",
-      duration: 9000,
-      isClosable: true,
-    })
+  const handleProjectEdit = (id) => {
+    setEditProjectId(id)
+    projectOnOpen()
   }
 
   useEffect(() => {
@@ -94,7 +90,6 @@ const Projects = () => {
   const updateData = () => {
     fetchData()
   }
-
   return (
     <AuthGuard>
       <BaseLayout>
@@ -118,11 +113,32 @@ const Projects = () => {
                 color="white"
                 p={5}
                 borderRadius={8}
+                position="relative"
               >
                 <Heading as="h3" size="md">
                   {project.Name}
                 </Heading>
                 <Text>{project.Description}</Text>
+
+                <Box
+                  position="absolute"
+                  top={3}
+                  right={3}
+                >
+                  <IconButton
+                    variantColor="ghost"
+                    aria-label="Edit client"
+                    icon="edit"
+                    onClick={() => handleProjectEdit(project.id)}
+                  />
+                  <IconButton
+                    variantColor="ghost"
+                    aria-label="Delete client"
+                    icon="delete"
+                    onClick={() => handleDelete('projects', project.id)}
+                  />
+
+                </Box>
               </Box>
             ))}
           <Button variantColor="blue" onClick={projectOnOpen}>
@@ -160,13 +176,13 @@ const Projects = () => {
                     variantColor="ghost"
                     aria-label="Edit client" 
                     icon="edit"
-                    onClick={() => editClient(client.id)}
+                    onClick={() => handleClientEdit(client.id)}
                   />
                   <IconButton
                     variantColor="ghost"
                     aria-label="Delete client" 
                     icon="delete"
-                    onClick={() => deleteClient(client.id)}
+                    onClick={() => handleDelete('clients', client.id)}
                   />
 
                 </Box>
@@ -181,11 +197,15 @@ const Projects = () => {
           isOpen={clientIsOpen}
           onClose={clientOnClose}
           updateData={updateData}
+          clients={clients}
+          clientId={editClientId}
         />
         <CreateProjectModal
           isOpen={projectIsOpen}
           onClose={projectOnClose}
           updateData={updateData}
+          projects={projects}
+          projectId={editProjectId}
         />
       </BaseLayout>
     </AuthGuard>

@@ -14,19 +14,22 @@ import {
   Select,
   Stack,
   Textarea,
+  useToast
 } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
 import { capitalize } from '../../helpers/capitalize'
 import { TOKEN_COOKIES_KEY, COLOR_CATEGORIES } from '../../constants'
 
-export const CreateProjectModal = ({ isOpen, onClose, updateData }) => {
+export const CreateProjectModal = ({ isOpen, onClose, updateData, projectId, projects }) => {
   const [clients, setClients] = useState([])
   const [formData, setFormData] = useState({
     Name: '',
     Description: '',
     Color: '',
+    client: null,
   })
+  const toast = useToast();
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
   const strapi = new Strapi('http://localhost:1337/')
@@ -41,13 +44,34 @@ export const CreateProjectModal = ({ isOpen, onClose, updateData }) => {
 
     let response
     try {
-      response = await strapi.createEntry('projects', formData)
+      if (projectId) {
+        response = await strapi.updateEntry('projects', projectId, formData)
+      } else {
+        response = await strapi.createEntry('projects', formData)
+      }
     } catch (e) {
       // Submission failed
     }
 
     // Submission succeeded
     if (response) {
+      if(projectId) {
+        toast({
+          title: "Project edited.",
+          description: "Client was successfully edited",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        })
+      } else {
+        toast({
+          title: "Project created.",
+          description: "Client was successfully created",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        })
+      }
       updateData()
     }
   }
@@ -59,6 +83,16 @@ export const CreateProjectModal = ({ isOpen, onClose, updateData }) => {
     }
     fetchClients()
   }, [token])
+
+  useEffect(() => {
+    if (projectId) {
+      const editProject = projects.filter(project => project.id === projectId)
+      if(editProject.length > 0) {
+        const { Name, Description, Color, client: { id } } = editProject[0]
+        setFormData({ Name, Description, Color, client: id })
+      }
+    }
+  }, [projectId])
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose}>
@@ -74,6 +108,7 @@ export const CreateProjectModal = ({ isOpen, onClose, updateData }) => {
                 <Input
                   name="Name"
                   placeholder="Project name"
+                  defaultValue={formData.Name}
                   onChange={onChange}
                   isRequired
                 />
@@ -84,6 +119,7 @@ export const CreateProjectModal = ({ isOpen, onClose, updateData }) => {
                 <Textarea
                   name="Description"
                   placeholder="Project description"
+                  defaultValue={formData.Description}
                   size="sm"
                   onChange={onChange}
                   isRequired
@@ -95,6 +131,7 @@ export const CreateProjectModal = ({ isOpen, onClose, updateData }) => {
                 <Select
                   name="Color"
                   placeholder="Select color"
+                  defaultValue={formData.Color}
                   onChange={onChange}
                   isRequired
                 >
@@ -109,6 +146,7 @@ export const CreateProjectModal = ({ isOpen, onClose, updateData }) => {
                 <Select
                   name="client"
                   placeholder="Select client"
+                  defaultValue={formData.client}
                   onChange={onChange}
                   isRequired
                 >
@@ -123,7 +161,9 @@ export const CreateProjectModal = ({ isOpen, onClose, updateData }) => {
 
         <DrawerFooter>
           <Button width="100%" variantColor="blue" onClick={submitForm}>
-            Create project
+            {projectId ? 'Edit' : 'Create'}
+            {' '}
+            project
           </Button>
         </DrawerFooter>
       </DrawerContent>

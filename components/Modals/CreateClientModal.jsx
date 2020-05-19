@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   Input,
@@ -14,18 +14,21 @@ import {
   Select,
   Stack,
   Textarea,
+  useToast
 } from '@chakra-ui/core'
 import Strapi from 'strapi-sdk-javascript'
 import Cookies from 'js-cookie'
 import { capitalize } from '../../helpers/capitalize'
 import { TOKEN_COOKIES_KEY, COLOR_CATEGORIES } from '../../constants'
 
-export const CreateClientModal = ({ isOpen, onClose, updateData }) => {
+export const CreateClientModal = ({ isOpen, onClose, updateData, clientId, clients }) => {
   const [formData, setFormData] = useState({
     Name: '',
     Description: '',
     Color: '',
+    client: null,
   })
+  const toast = useToast();
   const token = Cookies.get(TOKEN_COOKIES_KEY)
 
   const onChange = ({ currentTarget: { name, value } }) => {
@@ -40,17 +43,48 @@ export const CreateClientModal = ({ isOpen, onClose, updateData }) => {
 
     let response
     try {
-      response = await strapi.createEntry('clients', formData)
+      if (clientId) {
+        response = await strapi.updateEntry('clients', clientId, formData)
+      } else {
+        response = await strapi.createEntry('clients', formData)
+      }
     } catch (e) {
       // Submission failed
     }
 
     // Submission succeeded
     if (response) {
+      if (clientId) {
+        toast({
+          title: "Client edited.",
+          description: "Client was successfully edited",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        })
+      } else {
+        toast({
+          title: "Client created.",
+          description: "Client was successfully created",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        })
+      }
       updateData()
       // setMessage(response)
     }
   }
+
+  useEffect(() => {
+    if (clientId) {
+      const editClient = clients.filter(client => client.id === clientId)
+      if (editClient.length > 0) {
+        const { Name, Description, Color } = editClient[0]
+        setFormData({ Name, Description, Color })
+      }
+    }
+  }, [clientId])
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose}>
@@ -66,6 +100,7 @@ export const CreateClientModal = ({ isOpen, onClose, updateData }) => {
                 <Input
                   name="Name"
                   placeholder="Client name"
+                  defaultValue={formData.Name}
                   onChange={onChange}
                   isRequired
                 />
@@ -76,6 +111,7 @@ export const CreateClientModal = ({ isOpen, onClose, updateData }) => {
                 <Textarea
                   name="Description"
                   placeholder="Client description"
+                  defaultValue={formData.Description}
                   size="sm"
                   onChange={onChange}
                   isRequired
@@ -87,6 +123,7 @@ export const CreateClientModal = ({ isOpen, onClose, updateData }) => {
                 <Select
                   name="Color"
                   placeholder="Select color"
+                  defaultValue={formData.Color}
                   onChange={onChange}
                   isRequired
                 >
@@ -101,7 +138,9 @@ export const CreateClientModal = ({ isOpen, onClose, updateData }) => {
 
         <DrawerFooter>
           <Button width="100%" variantColor="blue" onClick={submitForm}>
-            Create client
+            {clientId ? 'Update' : 'Create'}
+            {' '}
+            client
           </Button>
         </DrawerFooter>
       </DrawerContent>
